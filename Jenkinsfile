@@ -62,15 +62,23 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
-            steps {
-                echo 'Starting Flask application...'
-                bat '''
-                    @echo off
-                    powershell -NoProfile -Command "Start-Process -FilePath '%PYTHON_PATH%' -ArgumentList 'app.py' -WorkingDirectory '%CD%' -WindowStyle Hidden"
-                '''
-            }
-        }
+        
+stage('Deploy') {
+    steps {
+        echo 'Deploying Flask application...'
+
+        bat '''
+            @echo off
+            if not exist "D:\\develop\\flask-jenkins-cicd" (
+                mkdir "D:\\develop\\flask-jenkins-cicd"
+            )
+            copy /Y app.py "D:\\develop\\flask-jenkins-cicd\\app.py"
+        '''
+
+        echo 'Application files deployed successfully.'
+    }
+}
+
     }
 
     post {
